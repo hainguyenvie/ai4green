@@ -165,61 +165,69 @@ export default function AIScanPage() {
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-8">
-          <ol className="flex items-center space-x-2 text-sm text-gray-600">
-            <li><Link href="/" className="hover:text-[--secondary-green]">Home</Link></li>
+          <ol className="flex items-center space-x-2 text-sm text-slate-500">
+            <li><Link href="/" className="hover:text-emerald-600 transition-colors">Trang Chủ</Link></li>
             <li>/</li>
-            <li className="text-[--primary-green] font-medium">AI Material Scanner</li>
+            <li className="text-emerald-600 font-medium">Quét Vật Liệu AI</li>
           </ol>
         </nav>
 
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-4">AI Material Scanner</h1>
-            <p className="text-gray-600 text-lg">
-              Upload images of recyclable materials or take photos to get started with your STEM project.
+          <div className="mb-12 text-center">
+            <div className="inline-flex items-center space-x-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Scan className="h-4 w-4" />
+              <span>Bước 1: Quét Vật Liệu</span>
+            </div>
+            <h1 className="text-4xl lg:text-5xl font-bold mb-6 text-slate-900">
+              Quét Vật Liệu AI Thông Minh
+            </h1>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Chụp ảnh các vật liệu tái chế hoặc tải lên hình ảnh để bắt đầu tạo dự án STEM của bạn
             </p>
           </div>
 
           {/* Upload Section */}
-          <Card className="mb-8">
-            <CardContent className="p-6">
-              <div className="upload-zone">
-                <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Drop images here or click to browse</h3>
-                <p className="text-gray-600 mb-6">Supports JPG, PNG, WebP files up to 10MB</p>
+          <div className="project-card mb-8">
+            <div className="p-8">
+              <div className="scan-zone">
+                <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Upload className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3 text-slate-900">Kéo thả hình ảnh hoặc nhấn để chọn</h3>
+                <p className="text-slate-600 mb-8 text-lg">Hỗ trợ file JPG, PNG, WebP tới 10MB</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button onClick={handleImageUpload} className="bg-[--primary-green] hover:bg-[--secondary-green]">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Upload Images
+                  <Button onClick={handleImageUpload} className="btn-primary group">
+                    <Upload className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
+                    Tải Lên Hình Ảnh
                   </Button>
-                  <Button variant="outline" onClick={handleCameraCapture}>
-                    <Camera className="h-4 w-4 mr-2" />
-                    Take Photo
+                  <Button onClick={handleCameraCapture} className="btn-secondary">
+                    <Camera className="h-5 w-5 mr-2" />
+                    Chụp Ảnh
                   </Button>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           {/* Uploaded Images Preview */}
           {uploadedImages.length > 0 && (
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle>Uploaded Images</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid md:grid-cols-2 gap-4">
+            <div className="project-card mb-8">
+              <div className="p-8">
+                <h3 className="text-xl font-bold mb-6 text-slate-900">Hình Ảnh Đã Tải Lên</h3>
+                <div className="grid md:grid-cols-2 gap-6">
                   {uploadedImages.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`Uploaded material ${index + 1}`}
-                      className="rounded-lg shadow-sm w-full h-48 object-cover"
-                    />
+                    <div key={index} className="relative group">
+                      <img
+                        src={image}
+                        alt={`Vật liệu ${index + 1}`}
+                        className="rounded-xl shadow-lg w-full h-48 object-cover group-hover:shadow-xl transition-shadow"
+                      />
+                      <div className="absolute inset-0 bg-black/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
 
           {/* Scan Button */}
@@ -229,17 +237,18 @@ export default function AIScanPage() {
                 size="lg"
                 onClick={performScan}
                 disabled={isScanning}
-                className="bg-[--success-green] hover:bg-[--primary-green]"
+                className="btn-primary group relative overflow-hidden"
               >
                 {isScanning ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Scanning...
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                    Đang Quét Vật Liệu...
                   </>
                 ) : (
                   <>
-                    <Search className="h-5 w-5 mr-2" />
-                    Scan Materials
+                    <Search className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform" />
+                    Bắt Đầu Quét AI
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
               </Button>

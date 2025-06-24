@@ -4,34 +4,44 @@
 
 :root {
   --background: hsl(0, 0%, 100%);
-  --foreground: hsl(27, 100%, 7%);
-  --muted: hsl(82, 30%, 95%);
-  --muted-foreground: hsl(122, 15%, 45%);
+  --foreground: hsl(222.2, 84%, 4.9%);
+  --muted: hsl(210, 40%, 98%);
+  --muted-foreground: hsl(215.4, 16.3%, 46.9%);
   --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(27, 100%, 7%);
+  --popover-foreground: hsl(222.2, 84%, 4.9%);
   --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(27, 100%, 7%);
-  --border: hsl(82, 20%, 90%);
-  --input: hsl(82, 20%, 90%);
-  --primary: hsl(122, 39%, 29%);
-  --primary-foreground: hsl(82, 100%, 95%);
-  --secondary: hsl(122, 39%, 49%);
-  --secondary-foreground: hsl(82, 100%, 95%);
-  --accent: hsl(122, 28%, 69%);
-  --accent-foreground: hsl(27, 100%, 7%);
-  --destructive: hsl(0, 84%, 60%);
-  --destructive-foreground: hsl(82, 100%, 95%);
-  --ring: hsl(27, 100%, 7%);
-  --radius: 0.5rem;
+  --card-foreground: hsl(222.2, 84%, 4.9%);
+  --border: hsl(214.3, 31.8%, 91.4%);
+  --input: hsl(214.3, 31.8%, 91.4%);
+  --primary: hsl(142, 71%, 45%);
+  --primary-foreground: hsl(355.7, 100%, 97.3%);
+  --secondary: hsl(210, 40%, 98%);
+  --secondary-foreground: hsl(222.2, 84%, 4.9%);
+  --accent: hsl(210, 40%, 98%);
+  --accent-foreground: hsl(222.2, 84%, 4.9%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(210, 40%, 98%);
+  --ring: hsl(142, 71%, 45%);
+  --radius: 0.75rem;
   
-  /* AI 4 Green specific colors */
-  --primary-green: hsl(122, 39%, 29%);
-  --secondary-green: hsl(122, 39%, 49%);
-  --accent-green: hsl(122, 28%, 69%);
-  --success-green: hsl(122, 49%, 39%);
-  --bg-light-green: hsl(82, 60%, 95%);
-  --text-dark-green: hsl(122, 59%, 19%);
-  --light-gray: hsl(210, 17%, 97%);
+  /* AI 4 Green modern colors */
+  --emerald-50: hsl(151, 81%, 96%);
+  --emerald-100: hsl(149, 80%, 90%);
+  --emerald-500: hsl(160, 84%, 39%);
+  --emerald-600: hsl(158, 64%, 52%);
+  --emerald-700: hsl(158, 64%, 45%);
+  --emerald-900: hsl(155, 100%, 9%);
+  
+  --slate-50: hsl(210, 40%, 98%);
+  --slate-100: hsl(210, 40%, 96%);
+  --slate-200: hsl(214.3, 31.8%, 91.4%);
+  --slate-300: hsl(212.7, 26.8%, 83.9%);
+  --slate-600: hsl(215.4, 16.3%, 46.9%);
+  --slate-900: hsl(222.2, 84%, 4.9%);
+  
+  --blue-50: hsl(214, 100%, 97%);
+  --blue-500: hsl(217, 91%, 60%);
+  --blue-600: hsl(221, 83%, 53%);
 }
 
 .dark {
@@ -62,63 +72,84 @@
   }
 
   body {
-    @apply font-sans antialiased bg-[--bg-light-green] text-[--text-dark-green];
+    @apply font-sans antialiased bg-white text-slate-900;
     font-family: 'Inter', sans-serif;
   }
 }
 
 @layer components {
   .hero-section {
-    background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+    background: linear-gradient(135deg, hsl(var(--emerald-600)) 0%, hsl(var(--emerald-500)) 100%);
     color: white;
-    min-height: 60vh;
-    @apply flex items-center;
+    min-height: 70vh;
+    @apply flex items-center relative overflow-hidden;
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    z-index: 0;
+  }
+
+  .hero-content {
+    @apply relative z-10;
+  }
+
+  .feature-card {
+    @apply bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100;
   }
 
   .feature-icon {
-    width: 60px;
-    height: 60px;
-    background: var(--accent-green);
-    @apply rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl;
+    @apply w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 text-white text-2xl;
+    background: linear-gradient(135deg, hsl(var(--emerald-500)) 0%, hsl(var(--emerald-600)) 100%);
   }
 
-  .material-item {
-    @apply bg-white rounded-lg p-4 my-2 border-l-4;
-    border-left-color: var(--accent-green);
+  .material-card {
+    @apply bg-white rounded-xl p-6 border border-slate-200 hover:border-emerald-300 transition-all duration-200 hover:shadow-md;
+  }
+
+  .scan-zone {
+    @apply border-2 border-dashed border-emerald-300 rounded-2xl p-12 text-center bg-emerald-50 transition-all duration-300 hover:border-emerald-400 hover:bg-emerald-100;
+  }
+
+  .project-card {
+    @apply bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100;
   }
 
   .lesson-step {
-    @apply bg-white rounded-xl p-6 my-4 border border-gray-200;
+    @apply bg-white rounded-2xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all duration-200;
   }
 
-  .progress-indicator {
-    background: var(--accent-green);
-    @apply h-2 rounded-full transition-all duration-300;
-  }
-
-  .chat-message {
-    @apply bg-gray-50 rounded-xl p-4 my-2;
-  }
-
-  .upload-zone {
-    border: 2px dashed var(--accent-green);
-    @apply rounded-xl p-12 text-center bg-white transition-colors;
-  }
-
-  .upload-zone:hover {
-    border-color: var(--secondary-green);
+  .ai-chat {
+    @apply bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200;
   }
 
   .timer-display {
-    background: var(--primary-green);
-    @apply text-white rounded-xl p-4 text-center text-xl font-semibold;
+    @apply bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-2xl p-6 text-center shadow-lg;
   }
 
-  .navbar-custom {
-    @apply bg-white shadow-sm;
+  .nav-modern {
+    @apply bg-white/90 backdrop-blur-md border-b border-slate-200/50;
   }
 
-  .nav-link-custom {
-    @apply text-[--text-dark-green] font-medium hover:text-[--secondary-green];
+  .btn-primary {
+    @apply bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold rounded-xl px-6 py-3 transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+
+  .btn-secondary {
+    @apply bg-white border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 font-semibold rounded-xl px-6 py-3 transition-all duration-200;
+  }
+
+  .status-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-xl;
   }
 }
