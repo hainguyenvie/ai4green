@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
-import { ArrowLeft, Clock, Book } from "lucide-react";
+import { ArrowLeft, Clock, Book, Lightbulb, ArrowRight, Users, BookOpen, Star, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -49,32 +49,36 @@ export default function RecommendationsPage() {
   }
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen py-8 bg-gradient-to-br from-slate-50 to-emerald-50">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-8">
-          <ol className="flex items-center space-x-2 text-sm text-gray-600">
-            <li><Link href="/" className="hover:text-[--secondary-green]">Home</Link></li>
+          <ol className="flex items-center space-x-2 text-sm text-slate-500">
+            <li><Link href="/" className="hover:text-emerald-600 transition-colors">Trang Chủ</Link></li>
             <li>/</li>
-            <li><Link href="/scan" className="hover:text-[--secondary-green]">Scan</Link></li>
+            <li><Link href="/scan" className="hover:text-emerald-600 transition-colors">Quét AI</Link></li>
             <li>/</li>
-            <li className="text-[--primary-green] font-medium">STEM Recommendations</li>
+            <li className="text-emerald-600 font-medium">Đề Xuất STEM</li>
           </ol>
         </nav>
 
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Recommended STEM Projects</h1>
-              <p className="text-gray-600 text-lg">
-                Based on your materials: {materialsSummary || "Various recyclable materials"}
-              </p>
+          <div className="mb-12 text-center">
+            <div className="inline-flex items-center space-x-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Lightbulb className="h-4 w-4" />
+              <span>Bước 2: Đề Xuất Dự Án</span>
             </div>
+            <h1 className="text-4xl lg:text-5xl font-bold mb-6 text-slate-900">
+              Dự Án STEM Được Đề Xuất
+            </h1>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
+              Dựa trên vật liệu của bạn: {materialsSummary || "Các vật liệu tái chế đa dạng"}
+            </p>
             <Link href="/scan">
-              <Button variant="outline">
+              <Button className="btn-secondary">
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Scan
+                Quay Lại Quét
               </Button>
             </Link>
           </div>
