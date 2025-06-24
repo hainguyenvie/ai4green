@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Upload, Camera, Search, Edit, ArrowRight, Trash2, Plus, Minus } from "lucide-react";
+import { Upload, Camera, Search, Edit, ArrowRight, Trash2, Plus, Minus, Scan } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -161,7 +161,7 @@ export default function AIScanPage() {
   };
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen py-8 bg-gradient-to-br from-slate-50 to-emerald-50">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <nav className="mb-8">
@@ -257,49 +257,57 @@ export default function AIScanPage() {
 
           {/* Scan Results */}
           {showResults && materials.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <div className="h-2 w-2 bg-green-500 rounded-full mr-2"></div>
-                  Identified Materials
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+            <div className="project-card">
+              <div className="p-8">
+                <div className="flex items-center mb-8">
+                  <div className="w-3 h-3 bg-emerald-500 rounded-full mr-3 animate-pulse"></div>
+                  <h3 className="text-2xl font-bold text-slate-900">Vật Liệu Đã Nhận Diện</h3>
+                  <div className="ml-auto">
+                    <span className="status-badge bg-emerald-100 text-emerald-700">
+                      {materials.length} vật liệu
+                    </span>
+                  </div>
+                </div>
+                
                 <div className="space-y-4">
                   {materials.map((material) => (
-                    <div key={material.id} className="material-item">
+                    <div key={material.id} className="material-card">
                       <div className="flex justify-between items-center">
-                        <div>
-                          <h4 className="font-semibold">{material.name}</h4>
-                          <p className="text-sm text-gray-600">Type: {material.type}</p>
+                        <div className="space-y-1">
+                          <h4 className="font-bold text-lg text-slate-900">{material.name}</h4>
+                          <p className="text-slate-600">Loại: {material.type}</p>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm text-gray-600">Qty:</span>
+                        <div className="flex items-center space-x-3">
+                          <span className="text-sm font-medium text-slate-600">Số lượng:</span>
+                          <div className="flex items-center space-x-2 bg-slate-100 rounded-lg p-1">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => updateQuantity(material.id, -1)}
+                              disabled={material.quantity <= 0}
+                              className="h-8 w-8 p-0 hover:bg-slate-200"
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <span className="font-bold text-lg mx-3 min-w-[30px] text-center text-slate-900">
+                              {material.quantity}
+                            </span>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => updateQuantity(material.id, 1)}
+                              className="h-8 w-8 p-0 hover:bg-slate-200"
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => updateQuantity(material.id, -1)}
-                            disabled={material.quantity <= 0}
-                          >
-                            <Minus className="h-3 w-3" />
-                          </Button>
-                          <span className="font-bold mx-2 min-w-[20px] text-center">
-                            {material.quantity}
-                          </span>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => updateQuantity(material.id, 1)}
-                          >
-                            <Plus className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-red-600 hover:text-red-700"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
                             onClick={() => removeMaterial(material.id)}
                           >
-                            <Trash2 className="h-3 w-3" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
@@ -307,21 +315,21 @@ export default function AIScanPage() {
                   ))}
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                  <Button variant="outline">
+                <div className="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t border-slate-200">
+                  <Button variant="outline" className="btn-secondary">
                     <Edit className="h-4 w-4 mr-2" />
-                    Add More Materials
+                    Thêm Vật Liệu Khác
                   </Button>
                   <Button 
                     onClick={confirmMaterials}
-                    className="bg-[--primary-green] hover:bg-[--secondary-green]"
+                    className="btn-primary group"
                   >
-                    Confirm & Get Recommendations
-                    <ArrowRight className="h-4 w-4 ml-2" />
+                    Xác Nhận & Nhận Đề Xuất
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
         </div>
       </div>

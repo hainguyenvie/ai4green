@@ -97,33 +97,39 @@ export default function CommunityPage() {
   const recentProjects = mockSubmissions.filter(p => !p.featured);
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen py-8 bg-gradient-to-br from-slate-50 to-emerald-50">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Community Showcase</h1>
-            <p className="text-gray-600 text-lg">Discover amazing STEM projects created by students around the world</p>
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center space-x-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+            <Users className="h-4 w-4" />
+            <span>Cộng Đồng AI 4 Green</span>
           </div>
-          <div className="flex gap-3 mt-4 lg:mt-0">
+          <h1 className="text-4xl lg:text-5xl font-bold mb-6 text-slate-900">
+            Triển Lãm Cộng Đồng
+          </h1>
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-8">
+            Khám phá những dự án STEM tuyệt vời được tạo ra bởi học sinh trên khắp thế giới
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/scan">
-              <Button className="bg-[--primary-green] hover:bg-[--secondary-green]">
-                <Plus className="h-4 w-4 mr-2" />
-                Create Project
+              <Button className="btn-primary group">
+                <Plus className="h-5 w-5 mr-2 group-hover:scale-110 transition-transform" />
+                Tạo Dự Án Mới
               </Button>
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filter
+                <Button className="btn-secondary">
+                  <Filter className="h-5 w-5 mr-2" />
+                  Lọc Dự Án
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setFilter('all')}>All Projects</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter('water')}>Water Projects</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter('energy')}>Energy Projects</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilter('robotics')}>Robotics</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter('all')}>Tất Cả Dự Án</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter('water')}>Dự Án Nước</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter('energy')}>Dự Án Năng Lượng</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilter('robotics')}>Robot Học</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
