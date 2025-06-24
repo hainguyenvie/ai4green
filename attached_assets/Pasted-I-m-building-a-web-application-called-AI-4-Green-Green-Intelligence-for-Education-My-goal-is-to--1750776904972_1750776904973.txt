@@ -1,0 +1,65 @@
+I'm building a web application called "AI 4 Green: Green Intelligence for Education". My goal is to create the main frontend flow using React.js on Replit. I need to set up the basic UI structure to demonstrate the user journey, without implementing specific backend logic yet.
+
+Here's a breakdown of the key pages/components and their interactions:
+
+**1. Home Page (Initial View):**
+   - A welcoming page that introduces "AI 4 Green".
+   - A prominent button or section to initiate the "AI Scan" process.
+
+**2. AI Scan Page:**
+   - This page should allow users to "upload an image" or "take a photo" of recycled materials.
+   - Display a placeholder for the scanned image.
+   - A button to "Scan Materials".
+   - After scanning, display a section to show "Identified Materials" (e.g., a list of items like "Plastic Bottle (x2)", "Cardboard Box (x1)").
+   - Buttons to "Edit Materials" (allowing users to adjust quantities, add/remove items) and "Confirm Materials".
+
+**3. Product Recommendation Page:**
+   - This page should display a list of "Recommended STEM Products" based on the confirmed materials.
+   - Each product item should include:
+     - A placeholder image.
+     - Product name.
+     - A brief description.
+     - A "View Lesson Plan" button.
+
+**4. Timed Lesson Blueprint Page:**
+   - This page will show the detailed "Lesson Plan" for a selected product.
+   - Display the product name.
+   - Sections for:
+     - "Objectives".
+     - "Warm-up Activities".
+     - "Step-by-step Instructions" (each step with a placeholder for text/image/video).
+     - "Related STEM Concepts".
+     - "Thinking Questions".
+     - "Assessment/Extension Activities".
+   - A timer or duration indicator for the lesson plan.
+   - A button to "Start Project" (or "Begin Lesson").
+
+**5. Project Execution/Interactive Learning Page:**
+   - This page simulates the user working on the project.
+   - Display the current step of the lesson plan.
+   - A placeholder for visual guidance (image/video).
+   - A text area for an "AI Chatbot Assistant" (input field and message display).
+   - "Next Step" and "Previous Step" buttons.
+   - A "Finish Project" button.
+
+**6. Submission/Feedback Page:**
+   - After finishing a project, this page allows users to:
+     - "Upload photos/videos of their finished product".
+     - Provide "Feedback" (e.g., difficulty, satisfaction, safety ratings).
+     - A "Share with Community" button.
+     - A "Submit" button.
+
+**7. Community Page (Optional, but good for future vision):**
+   - A simple page displaying shared projects from other users (placeholders for images/titles).
+
+**Frontend Development Guidelines for Replit:**
+
+* **Technology:** React.js.
+* **Routing:** Use `react-router-dom` to manage navigation between pages.
+* **State Management:** Use React's built-in `useState` and `useEffect` hooks for local component state. No need for complex global state management at this stage.
+* **Styling:** Basic CSS or a simple CSS framework (like Bootstrap or Tailwind CSS if Replit supports it easily, otherwise plain CSS is fine) for layout and visual separation. Focus on functional layout rather than elaborate design.
+* **Component Structure:** Break down the UI into logical components (e.g., `HomePage`, `AIScanPage`, `ProductCard`, `LessonPlanDetails`).
+* **Placeholders:** Use placeholder text, images, and buttons where actual data or complex logic would eventually go. The goal is to establish the flow.
+* **User Flow:** Ensure buttons and navigation links correctly move the user through the intended sequence of pages.
+
+**Your task is to create the necessary React components and set up the routing to demonstrate this core user flow within Replit. Provide the basic code structure for each component and the `App.js` file for routing.**
