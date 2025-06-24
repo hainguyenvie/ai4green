@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(27, 100%, 7%);
+  --muted: hsl(82, 30%, 95%);
+  --muted-foreground: hsl(122, 15%, 45%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(27, 100%, 7%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(27, 100%, 7%);
+  --border: hsl(82, 20%, 90%);
+  --input: hsl(82, 20%, 90%);
+  --primary: hsl(122, 39%, 29%);
+  --primary-foreground: hsl(82, 100%, 95%);
+  --secondary: hsl(122, 39%, 49%);
+  --secondary-foreground: hsl(82, 100%, 95%);
+  --accent: hsl(122, 28%, 69%);
+  --accent-foreground: hsl(27, 100%, 7%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(82, 100%, 95%);
+  --ring: hsl(27, 100%, 7%);
+  --radius: 0.5rem;
+  
+  /* AI 4 Green specific colors */
+  --primary-green: hsl(122, 39%, 29%);
+  --secondary-green: hsl(122, 39%, 49%);
+  --accent-green: hsl(122, 28%, 69%);
+  --success-green: hsl(122, 49%, 39%);
+  --bg-light-green: hsl(82, 60%, 95%);
+  --text-dark-green: hsl(122, 59%, 19%);
+  --light-gray: hsl(210, 17%, 97%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 4%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 4%, 16%);
+  --muted-foreground: hsl(240, 5%, 65%);
+  --popover: hsl(240, 10%, 4%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 4%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 4%, 16%);
+  --input: hsl(240, 4%, 16%);
+  --primary: hsl(122, 39%, 29%);
+  --primary-foreground: hsl(82, 100%, 95%);
+  --secondary: hsl(240, 4%, 16%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 4%, 16%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 63%, 31%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 5%, 84%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-[--bg-light-green] text-[--text-dark-green];
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer components {
+  .hero-section {
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+    color: white;
+    min-height: 60vh;
+    @apply flex items-center;
+  }
+
+  .feature-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--accent-green);
+    @apply rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl;
+  }
+
+  .material-item {
+    @apply bg-white rounded-lg p-4 my-2 border-l-4;
+    border-left-color: var(--accent-green);
+  }
+
+  .lesson-step {
+    @apply bg-white rounded-xl p-6 my-4 border border-gray-200;
+  }
+
+  .progress-indicator {
+    background: var(--accent-green);
+    @apply h-2 rounded-full transition-all duration-300;
+  }
+
+  .chat-message {
+    @apply bg-gray-50 rounded-xl p-4 my-2;
+  }
+
+  .upload-zone {
+    border: 2px dashed var(--accent-green);
+    @apply rounded-xl p-12 text-center bg-white transition-colors;
+  }
+
+  .upload-zone:hover {
+    border-color: var(--secondary-green);
+  }
+
+  .timer-display {
+    background: var(--primary-green);
+    @apply text-white rounded-xl p-4 text-center text-xl font-semibold;
+  }
+
+  .navbar-custom {
+    @apply bg-white shadow-sm;
+  }
+
+  .nav-link-custom {
+    @apply text-[--text-dark-green] font-medium hover:text-[--secondary-green];
+  }
+}
