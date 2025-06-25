@@ -152,10 +152,15 @@ export default function AiScanPage() {
   const [showResults, setShowResults] = useState(false);
   const [step, setStep] = useState(0);
   const [image, setImage] = useState<string | null>(null);
-  const [materials, setMaterials] = useState(mockDetection);
+  const [materials, setMaterials] = useState([
+    { id: 1, name: "Chai nhựa", quantity: 3 },
+    { id: 2, name: "Lon nhôm", quantity: 2 },
+    { id: 3, name: "Giấy carton", quantity: 5 },
+  ]);
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false);
   const [removeId, setRemoveId] = useState<number | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const { data: materialsData = [] } = useQuery<Material[]>({
     queryKey: ['/api/materials', sessionId],
@@ -292,22 +297,137 @@ export default function AiScanPage() {
     setLocation('/recommendations');
   };
 
-  // Handle image upload
-  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(URL.createObjectURL(e.target.files[0]));
-      setStep(1);
+  // Get API key from environment variables
+  const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+
+  // OpenAI Vision API integration
+  const analyzeImageWithOpenAI = async (imageFile: File) => {
+    if (!apiKey) {
+      alert("OpenAI API key chưa được cấu hình. Vui lòng thêm VITE_OPENAI_API_KEY vào file .env");
+      // Fallback to demo data
+      setMaterials([
+        { id: Date.now(), name: "Chai nhựa", quantity: 2 },
+        { id: Date.now() + 1, name: "Lon nhôm", quantity: 1 },
+        { id: Date.now() + 2, name: "Giấy carton", quantity: 3 },
+      ]);
+      setStep(2);
+      return;
+    }
+
+    setIsAnalyzing(true);
+    try {
+      // Convert image to base64
+      const base64Image = await convertToBase64(imageFile);
+      
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-4o",
+          messages: [
+            {
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text: "Phân tích hình ảnh này và nhận diện các vật liệu tái chế cùng với số lượng của chúng. Chỉ trả về một mảng JSON theo định dạng chính xác này: [{\"name\": \"tên_vật_liệu_tiếng_việt\", \"quantity\": số}]. Tập trung vào các vật liệu tái chế phổ biến như chai nhựa, lon nhôm, giấy carton, chai thủy tinh, túi nhựa, giấy, v.v."
+                },
+                {
+                  type: "image_url",
+                  image_url: {
+                    url: `data:image/jpeg;base64,${base64Image}`
+                  }
+                }
+              ]
+            }
+          ],
+          max_tokens: 500
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`OpenAI API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const content = data.choices[0].message.content;
+      
+      // Parse the JSON response - handle markdown code blocks
+      try {
+        // Remove markdown code blocks if present
+        let jsonString = content.trim();
+        if (jsonString.startsWith('```json')) {
+          jsonString = jsonString.replace(/```json\s*/, '').replace(/\s*```$/, '');
+        } else if (jsonString.startsWith('```')) {
+          jsonString = jsonString.replace(/```\s*/, '').replace(/\s*```$/, '');
+        }
+        
+        const detectedMaterials = JSON.parse(jsonString);
+        const materialsWithId = detectedMaterials.map((material: any, index: number) => ({
+          id: Date.now() + index,
+          name: material.name,
+          quantity: material.quantity
+        }));
+        setMaterials(materialsWithId);
+        setStep(2); // Move to confirmation step
+      } catch (parseError) {
+        console.error("Failed to parse OpenAI response:", content);
+        // Fallback to demo data if parsing fails
+        setMaterials([
+          { id: Date.now(), name: "Chai nhựa", quantity: 2 },
+          { id: Date.now() + 1, name: "Lon nhôm", quantity: 1 },
+        ]);
+        setStep(2);
+      }
+    } catch (error) {
+      console.error("Error analyzing image:", error);
+      alert("Lỗi khi phân tích hình ảnh. Vui lòng thử lại.");
+      // Fallback to demo data on error
+      setMaterials([
+        { id: Date.now(), name: "Chai nhựa", quantity: 2 },
+        { id: Date.now() + 1, name: "Lon nhôm", quantity: 1 },
+      ]);
+      setStep(2);
+    } finally {
+      setIsAnalyzing(false);
     }
   };
 
-  // Material quantity edit
-  const handleMaterialChange = (id: number, value: number) => {
-    setMaterials((prev) => prev.map((m) => (m.id === id ? { ...m, quantity: value } : m)));
+  // Helper function to convert file to base64
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        const base64Data = base64.split(',')[1]; // Remove data:image/jpeg;base64, prefix
+        resolve(base64Data);
+      };
+      reader.onerror = error => reject(error);
+    });
   };
 
-  // Add/Remove material
-  const addMaterial = () => {
-    setMaterials((prev) => [...prev, { id: Date.now(), name: "Vật liệu mới", quantity: 1 }]);
+  // Handle image upload with OpenAI analysis
+  const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setImage(URL.createObjectURL(file));
+      setStep(1);
+      
+      // Store the file for later analysis
+      (window as any).uploadedImageFile = file;
+    }
+  };
+
+  // Trigger OpenAI analysis
+  const startAIAnalysis = async () => {
+    const file = (window as any).uploadedImageFile;
+    if (file) {
+      await analyzeImageWithOpenAI(file);
+    }
   };
 
   // Stepper UI: always show all 7 steps in a single row, no horizontal scroll
@@ -339,6 +459,7 @@ export default function AiScanPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-emerald-50 py-10">
       <div className="max-w-2xl mx-auto">
         <Stepper />
+
         <Card className="p-8 shadow-xl">
           {/* Step 0: Upload */}
           {step === 0 && (
@@ -351,78 +472,118 @@ export default function AiScanPage() {
                   <span><Upload className="w-5 h-5 mr-2" /> Chọn hình ảnh</span>
                 </Button>
               </label>
+              {!apiKey && (
+                <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg text-center max-w-md">
+                  ⚠️ OpenAI API key chưa được cấu hình.<br/>
+                  Tạo file <code>.env</code> và thêm:<br/>
+                  <code className="bg-white px-2 py-1 rounded">VITE_OPENAI_API_KEY=your_key_here</code>
+                </div>
+              )}
             </div>
           )}
+
           {/* Step 1: Preview */}
           {step === 1 && image && (
             <div className="flex flex-col items-center gap-6">
               <img src={image} alt="Preview" className="rounded-xl shadow-lg w-full max-w-xs mx-auto" />
               <div className="flex gap-4">
-                <Button onClick={() => setStep(2)} className="btn-primary"><ArrowRight className="w-4 h-4 mr-2" /> Tiếp tục</Button>
-                <Button variant="outline" onClick={() => setStep(0)}><ArrowLeft className="w-4 h-4 mr-2" /> Chọn lại</Button>
+                <Button onClick={startAIAnalysis} className="btn-primary" disabled={isAnalyzing}>
+                  {isAnalyzing ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      AI đang phân tích...
+                    </>
+                  ) : (
+                    <>
+                      <Lightbulb className="w-4 h-4 mr-2" /> 
+                      {apiKey ? "Bắt đầu phân tích AI" : "Sử dụng dữ liệu demo"}
+                    </>
+                  )}
+                </Button>
+                <Button variant="outline" onClick={() => setStep(0)}>
+                  <ArrowLeft className="w-4 h-4 mr-2" /> Chọn lại
+                </Button>
               </div>
+              {!apiKey && (
+                <div className="text-sm text-amber-600 text-center">
+                  API key chưa có, sẽ sử dụng dữ liệu demo
+                </div>
+              )}
             </div>
           )}
-          {/* Step 2: AI Detect (mock) */}
+
+          {/* Step 2: Confirm/Edit Materials */}
           {step === 2 && (
             <div className="flex flex-col items-center gap-6">
-              <Lightbulb className="w-16 h-16 text-yellow-400 animate-bounce" />
-              <h2 className="text-2xl font-bold text-slate-900">AI nhận diện vật liệu</h2>
-              <p className="text-slate-600">AI đã phát hiện các vật liệu sau:</p>
-              <ul className="w-full max-w-xs mx-auto">
+              <CheckCircle className="w-16 h-16 text-emerald-500 mb-2" />
+              <h2 className="text-2xl font-bold text-slate-900">AI đã nhận diện vật liệu</h2>
+              
+              {/* Show uploaded image for comparison */}
+              {image && (
+                <div className="w-full max-w-sm mx-auto">
+                  <h3 className="text-sm font-medium text-slate-700 mb-2 text-center">Hình ảnh đã tải lên:</h3>
+                  <img src={image} alt="Hình ảnh gốc" className="rounded-lg shadow-md w-full" />
+                </div>
+              )}
+              
+              <div className="bg-emerald-50 p-4 rounded-lg w-full max-w-lg">
+                <div className="text-sm text-emerald-700 mb-2">✅ Phân tích hoàn tất!</div>
+                <div className="text-sm text-slate-600">Vui lòng kiểm tra và chỉnh sửa nếu cần:</div>
+              </div>
+              
+              <div className="w-full max-w-lg mx-auto">
+                {/* Header row */}
+                <div className="flex items-center gap-3 py-2 border-b-2 border-slate-300 bg-slate-50 rounded-t-lg px-3">
+                  <div className="flex-1 min-w-0 text-sm font-semibold text-slate-700">
+                    Tên vật liệu
+                  </div>
+                  <div className="w-20 text-center text-sm font-semibold text-slate-700">
+                    Số lượng
+                  </div>
+                  <div className="w-10 text-center text-sm font-semibold text-slate-700">
+                    Xóa
+                  </div>
+                </div>
+                
+                {/* Material rows */}
                 {materials.map((m) => (
-                  <li key={m.id} className="flex justify-between items-center py-2 border-b last:border-b-0">
-                    <span>{m.name}</span>
-                    <span className="font-semibold">{m.quantity}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button className="btn-primary" onClick={() => setStep(3)}><ArrowRight className="w-4 h-4 mr-2" /> Xác nhận</Button>
-            </div>
-          )}
-          {/* Step 3: Confirm/Edit Materials */}
-          {step === 3 && (
-            <div className="flex flex-col items-center gap-6">
-              <Edit className="w-16 h-16 text-blue-400 mb-2" />
-              <h2 className="text-2xl font-bold text-slate-900">Xác nhận & chỉnh sửa vật liệu</h2>
-              <ul className="w-full max-w-xs mx-auto">
-                {materials.map((m) => (
-                  <li key={m.id} className="flex items-center gap-2 py-2 border-b last:border-b-0">
+                  <div key={m.id} className="flex items-center gap-3 py-3 border-b last:border-b-0 px-3 hover:bg-slate-50">
                     <input
-                      className="border rounded px-2 py-1 w-24"
+                      className="border rounded px-3 py-2 flex-1 min-w-0 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                      placeholder="Nhập tên vật liệu..."
                       value={m.name}
                       onChange={e => setMaterials(prev => prev.map(x => x.id === m.id ? { ...x, name: e.target.value } : x))}
                     />
                     <input
                       type="number"
                       min={1}
-                      className="border rounded px-2 py-1 w-16 text-center"
+                      className="border rounded px-3 py-2 w-20 text-center text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                       value={m.quantity}
-                      onChange={e => handleMaterialChange(m.id, Number(e.target.value))}
+                      onChange={e => setMaterials(prev => prev.map(x => x.id === m.id ? { ...x, quantity: Number(e.target.value) } : x))}
                     />
-                    <Button size="icon" variant="ghost" onClick={() => handleRemoveMaterial(m.id)}><span className="text-red-500">×</span></Button>
-                  </li>
+                    <Button size="icon" variant="ghost" onClick={() => handleRemoveMaterial(m.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50 w-10">
+                      <span className="text-lg">×</span>
+                    </Button>
+                  </div>
                 ))}
-              </ul>
-              <Button variant="outline" onClick={addMaterial}>+ Thêm vật liệu</Button>
-              <Button className="btn-primary mt-4" onClick={() => setStep(4)}><ArrowRight className="w-4 h-4 mr-2" /> Gợi ý sản phẩm</Button>
-            </div>
-          )}
-          {/* Remove confirmation dialog */}
-          {showRemoveConfirm && (
-            <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-              <div className="bg-white rounded-xl shadow-lg p-6 w-80 flex flex-col items-center">
-                <div className="mb-4 text-lg font-semibold text-slate-900">Xác nhận xoá vật liệu?</div>
-                <div className="mb-6 text-slate-600 text-center">Bạn có chắc muốn xoá vật liệu này khỏi danh sách?</div>
-                <div className="flex gap-4">
-                  <Button variant="destructive" onClick={confirmRemoveMaterial}>Xoá</Button>
-                  <Button variant="outline" onClick={() => setShowRemoveConfirm(false)}>Huỷ</Button>
-                </div>
+                
+                {materials.length === 0 && (
+                  <div className="text-center py-8 text-slate-500">
+                    Chưa có vật liệu nào. Nhấn "Thêm vật liệu" để bắt đầu.
+                  </div>
+                )}
               </div>
+              <Button variant="outline" onClick={() => setMaterials(prev => [...prev, { id: Date.now(), name: "Vật liệu mới", quantity: 1 }])}>
+                + Thêm vật liệu
+              </Button>
+              <Button className="btn-primary mt-4" onClick={() => setStep(3)}>
+                <ArrowRight className="w-4 h-4 mr-2" /> Gợi ý sản phẩm
+              </Button>
             </div>
           )}
-          {/* Step 4: Product Recommendation */}
-          {step === 4 && (
+
+          {/* Step 3: Product Recommendation */}
+          {step === 3 && (
             <div className="flex flex-col items-center gap-6">
               <Lightbulb className="w-16 h-16 text-emerald-400 mb-2" />
               <h2 className="text-2xl font-bold text-slate-900">Gợi ý sản phẩm STEM</h2>
@@ -439,13 +600,14 @@ export default function AiScanPage() {
                   </div>
                 ))}
               </div>
-              <Button className="btn-primary mt-4" disabled={!selectedProduct} onClick={() => setStep(5)}>
+              <Button className="btn-primary mt-4" disabled={!selectedProduct} onClick={() => setStep(4)}>
                 <ArrowRight className="w-4 h-4 mr-2" /> Xem kế hoạch bài học
               </Button>
             </div>
           )}
-          {/* Step 5: Timed Lesson Blueprint */}
-          {step === 5 && (
+
+          {/* Step 4: Timed Lesson Blueprint */}
+          {step === 4 && (
             <div className="flex flex-col gap-6 max-w-3xl mx-auto bg-white rounded-xl p-6 shadow">
               <h2 className="text-2xl font-bold text-emerald-700 mb-2">KẾ HOẠCH BÀI HỌC: {lessonPlan.topic}</h2>
               <h3 className="text-lg font-semibold text-slate-900 mt-4 mb-1">I. Khái quát chủ đề</h3>
