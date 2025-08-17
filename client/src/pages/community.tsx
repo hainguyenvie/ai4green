@@ -103,7 +103,7 @@ export default function CommunityPage() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center space-x-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
             <Users className="h-4 w-4" />
-            <span>Cộng Đồng AI 4 Green</span>
+            <span>Cộng Đồng RecyCool</span>
           </div>
           <h1 className="text-4xl lg:text-5xl font-bold mb-6 text-slate-900">
             Triển Lãm Cộng Đồng

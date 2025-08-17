@@ -16,7 +16,7 @@ export default function Navigation() {
               <Leaf className="h-5 w-5 text-white" />
             </div>
             <span className="bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
-              AI 4 Green
+              RecyCool
             </span>
           </Link>
           

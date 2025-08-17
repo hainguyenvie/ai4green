@@ -326,7 +326,7 @@ export default function SubmissionPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-gray-600 mb-4">
-                Help inspire other students by sharing your project with the AI 4 Green community!
+                Help inspire other students by sharing your project with the RecyCool community!
               </p>
               
               <div className="space-y-3">
@@ -337,7 +337,7 @@ export default function SubmissionPage() {
                     onCheckedChange={(checked) => setFormData(prev => ({ ...prev, shareWithCommunity: checked as boolean }))}
                   />
                   <div>
-                    <Label htmlFor="share-community" className="font-medium">Share with AI 4 Green Community</Label>
+                    <Label htmlFor="share-community" className="font-medium">Share with RecyCool Community</Label>
                     <p className="text-sm text-gray-600">Your project will be visible to other students and teachers for inspiration</p>
                   </div>
                 </div>

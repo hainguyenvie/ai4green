@@ -30,7 +30,7 @@ export default function HomePage() {
               <motion.div className="space-y-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                 <div className="flex items-center space-x-2 text-emerald-700">
                   <Recycle className="h-6 w-6" />
-                  <span className="text-base font-semibold uppercase tracking-wide">AI 4 Green Platform</span>
+                  <span className="text-base font-semibold uppercase tracking-wide">RecyCool Platform</span>
                 </div>
                 <h1 className="text-5xl lg:text-6xl font-extrabold leading-tight text-slate-900">
                   Biến Rác Thải Thành
@@ -101,8 +101,8 @@ export default function HomePage() {
               <Sparkles className="h-5 w-5" />
               <span>Quy Trình Hoạt Động</span>
             </div>
-            <h2 className="text-4xl lg:text-5xl font-extrabold mb-6 text-slate-900">
-              AI 4 Green Hoạt Động Như Thế Nào?
+                          <h2 className="text-4xl lg:text-5xl font-extrabold mb-6 text-slate-900">
+              RecyCool Hoạt Động Như Thế Nào?
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
               Bốn bước đơn giản để biến rác thải thành kiến thức học tập

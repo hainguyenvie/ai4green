@@ -1,8 +1,8 @@
-# AI 4 Green: Educational STEM Platform
+# RecyCool: Educational STEM Platform
 
 ## Overview
 
-AI 4 Green is a comprehensive educational platform that transforms waste materials into STEM learning opportunities using artificial intelligence. The platform allows users to scan recyclable materials, receive AI-powered project recommendations, and create personalized educational experiences. Built as a full-stack web application with a React frontend and Express.js backend.
+RecyCool is a comprehensive educational platform that transforms waste materials into STEM learning opportunities using artificial intelligence. The platform allows users to scan recyclable materials, receive AI-powered project recommendations, and create personalized educational experiences. Built as a full-stack web application with a React frontend and Express.js backend.
 
 ## System Architecture
 

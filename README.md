@@ -1,4 +1,4 @@
-# AI 4 Green - Green Intelligence for Education
+# RecyCool - Green Intelligence for Education
 
 A Vietnamese educational platform that uses AI to turn recyclable materials into STEM learning experiences for students aged 5-14.
 
