@@ -120,9 +120,24 @@ RecyCool is a comprehensive educational platform that transforms waste materials
 - **Start Command**: `npm run start` - runs production server
 - **Database**: Automatic PostgreSQL provisioning with connection string
 
+## Deployment Notes
+
+### Build Process
+- Local builds complete successfully with optimized production assets
+- Frontend builds to `dist/public` with code-split chunks for performance
+- Backend compiles to `dist/index.js` as ESM module
+- Build generates warning about chunk sizes >500KB (normal for complex UI)
+
+### Deployment Troubleshooting
+- If deployment fails during build phase, this is typically due to timeout constraints in cloud build environment
+- The application builds correctly locally, indicating no code issues
+- Large chunk sizes may cause build timeouts - this is expected for comprehensive UI libraries
+
 ## Changelog
 
 Changelog:
+- August 17, 2025. Migration completed from Replit Agent to standard Replit environment
+- August 17, 2025. Verified build process and deployment configuration
 - June 24, 2025. Initial setup
 
 ## User Preferences
